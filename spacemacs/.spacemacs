@@ -32,7 +32,6 @@ values."
      java
      latex
      ruby
-     i3-emacs
      (shell :variables shell-default-shell 'eshell)
      git
      ;; markdown
@@ -50,7 +49,10 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(smart-tabs-mode
-                                      evil-smartparens)
+                                      evil-smartparens
+                                      (i3-emacs :location
+                                                (recipe :fetcher github
+                                                        :repo "vava/i3-emacs")))
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -249,8 +251,8 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
-
   (setq-default
+   i3-collect-windows-function 'i3-collect-all-windows
    undo-limit (expt 1024 3)
    c-basic-offset 2
    tab-width 2
@@ -287,6 +289,7 @@ layers configuration. You are free to put any user code."
   (set-face-attribute 'whitespace-newline nil :foreground "gray30")
   (smart-tabs-insinuate 'c 'c++ 'java 'ruby 'python 'cperl 'nxml)
   (global-flycheck-mode 1)
+  (use-package "i3-integration")
   (set-variable 'popwin:special-display-config
                 (mapcar (lambda (seq)
                           (if (not (string= "*Help*" (car seq)))
@@ -318,7 +321,9 @@ layers configuration. You are free to put any user code."
               (lambda (r)
                 (if (not (get-text-property 0 'invisible r))
                     (propertize (replace-regexp-in-string " " "\u2002" r)
-                                'face (get-text-property 0 'face r))))))
+                                'face (get-text-property 0 'face r)))))
+  (evil-leader/set-key
+    "of" 'make-frame))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

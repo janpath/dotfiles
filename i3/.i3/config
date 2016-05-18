@@ -121,8 +121,8 @@ bindsym $mod+q exec "quickswitch.py"
 bindsym $mod+u exec i3-input
 
 bindsym $mod+b border toggle
-#new_window 1pixel
-#new_float 1pixel
+new_window 1pixel
+new_float 1pixel
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -196,8 +196,9 @@ bindsym Mod4+l exec ~/.bin/screen_off_slock.sh
 bindsym Mod4+s exec keepassx
 bindsym Mod4+w exec chromium
 bindsym Mod4+h exec urxvt -title "[f] htop" -g 120x40 -e htop
-bindsym Mod4+m exec urxvt -title "[f] mutt" -g 120x40 -e mutt
+# bindsym Mod4+m exec urxvt -title "[f] mutt" -g 120x40 -e mutt
+bindsym Mod4+m exec emacsclient -c -n -e '(progn (delete-other-windows) (gnus))'
 bindsym Mod4+p exec pavucontrol --class '[f] pavucontrol'
-bindsym Mod4+e exec eg
+bindsym Mod4+e exec emacsclient -c -n -e '(progn (delete-other-windows) (spacemacs/home))'
 
 #exec --no-startup-id compton

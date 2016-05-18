@@ -32,6 +32,7 @@ values."
      java
      latex
      ruby
+     markdown
      (shell :variables shell-default-shell 'eshell)
      git
      ;; markdown
@@ -273,10 +274,12 @@ in `dotspacemacs/user-config'."
   (global-whitespace-mode 1)
   ;; (add-hook 'prog-mode-hook 'aggressive-indent-mode)
   (add-hook 'eshell-mode-hook 'smartparens-mode)
+  (add-hook 'eshell-mode-hook (lambda () (company-mode-set-explicitly nil)))
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'latex-mode-hook 'flyspell-mode)
   (add-hook 'gnus-message-setup-hook 'mml-secure-message-sign)
-  (add-hook 'text-mode 'turn-on-auto-fill))
+  (add-hook 'text-mode 'turn-on-auto-fill)
+  (add-hook 'inf-ruby-mode-hook 'smartparens-mode))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -290,13 +293,21 @@ layers configuration. You are free to put any user code."
   (smart-tabs-insinuate 'c 'c++ 'java 'ruby 'python 'cperl 'nxml)
   (global-flycheck-mode 1)
   (use-package "i3-integration")
+  (defadvice eshell-gather-process-output
+      (before absolute-cmd (command args) act)
+    (setq command (file-truename command)))
   (set-variable 'popwin:special-display-config
                 (mapcar (lambda (seq)
-                          (if (not (string= "*Help*" (car seq)))
-                              seq
-                            (append '("^\\*Help\\(-[1-9][0-9]*\\)?\\*$"
-                                      :regexp t)
-                                    (cdr seq))))
+                          (append
+                           (cond
+                            ((string= "*Help*" (car seq))
+                             '("^\\*Help\\(-[1-9][0-9]*\\)?\\*$"
+                               :regexp t))
+                            ((string= "*Async Shell Command*" (car seq))
+                             '("^\\*Async Shell Command\\*\\(<[0-9]+>\\)?"
+                               :regexp t))
+                            (t (list (car seq))))
+                           (cdr seq)))
                         popwin:special-display-config))
   (set-variable 'popwin:special-display-config
                 (append popwin:special-display-config
@@ -321,9 +332,7 @@ layers configuration. You are free to put any user code."
               (lambda (r)
                 (if (not (get-text-property 0 'invisible r))
                     (propertize (replace-regexp-in-string " " "\u2002" r)
-                                'face (get-text-property 0 'face r)))))
-  (evil-leader/set-key
-    "of" 'make-frame))
+                                'face (get-text-property 0 'face r))))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -332,13 +341,15 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(async-shell-command-buffer (quote new-buffer))
  '(browse-url-browser-function (quote browse-url-chromium))
- '(gnus-buttonized-mime-types (quote ("multipart/signed" "multipart/encrypted")))
  '(gnus-article-emulate-mime t)
+ '(gnus-buttonized-mime-types (quote ("multipart/signed" "multipart/encrypted")))
  '(mm-decrypt-option (quote known))
  '(mm-verify-option (quote known))
  '(password-cache-expiry 300)
- '(send-mail-function (quote smtpmail-send-it)))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(vc-follow-symlinks t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -17,7 +17,10 @@
                    (switch-to-buffer name)
                  (eshell 'Z)
                  (rename-buffer name))))))
-  "ow" 'delete-other-windows)
+  "ow" 'delete-other-windows
+  "of" (lambda () (interactive)
+         (make-frame)
+         (delete-other-windows)))
 
 (evil-leader/set-key-for-mode 'racket-mode
   "ms$" 'jpath/racket-evil-send-last-sexp-eol)

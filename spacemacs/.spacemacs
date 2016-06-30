@@ -23,8 +23,8 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     better-defaults
      auto-completion
-     ;; better-defaults
      emacs-lisp
      racket
      myconfig
@@ -32,18 +32,19 @@ values."
      java
      latex
      ruby
+     ruby-on-rails
      markdown
+     html
+     yaml
+     haskell
+     (rcirc :variables rcirc-enable-authinfo-support t)
      (shell :variables shell-default-shell 'eshell)
      git
-     ;; markdown
      org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
      spell-checking
      syntax-checking
      gnus
-     ;; version-control
+     version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -51,6 +52,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(smart-tabs-mode
                                       evil-smartparens
+                                      bbdb
                                       (i3-emacs :location
                                                 (recipe :fetcher github
                                                         :repo "vava/i3-emacs")))
@@ -257,6 +259,7 @@ in `dotspacemacs/user-config'."
    undo-limit (expt 1024 3)
    c-basic-offset 2
    tab-width 2
+   standard-indent 2
    ;; indent-tabs-mode nil
    backup-directory-alist '(("." . "~/.saves"))
    delete-old-versions t
@@ -270,7 +273,14 @@ in `dotspacemacs/user-config'."
    tramp-default-method "ssh"
    gnus-message-replyencrypt t
    gnus-message-replysign t
-   helm-ff-newfile-prompt-p nil)
+   helm-ff-newfile-prompt-p nil
+   rcirc-server-alist '(("chat.freenode.net"
+                         :nick "jan_path"
+                         :user-name "jan_path"
+                         :full-name "Jan Path"
+                         :port 6697
+                         :encryption tls
+                         :channels ("#haskell" "#emacs"))))
   (global-whitespace-mode 1)
   ;; (add-hook 'prog-mode-hook 'aggressive-indent-mode)
   (add-hook 'eshell-mode-hook 'smartparens-mode)
@@ -278,7 +288,7 @@ in `dotspacemacs/user-config'."
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'latex-mode-hook 'flyspell-mode)
   (add-hook 'gnus-message-setup-hook 'mml-secure-message-sign)
-  (add-hook 'text-mode 'turn-on-auto-fill)
+  (add-hook 'text-mode 'auto-fill-mode)
   (add-hook 'inf-ruby-mode-hook 'smartparens-mode))
 
 (defun dotspacemacs/user-config ()
@@ -332,7 +342,23 @@ layers configuration. You are free to put any user code."
               (lambda (r)
                 (if (not (get-text-property 0 'invisible r))
                     (propertize (replace-regexp-in-string " " "\u2002" r)
-                                'face (get-text-property 0 'face r))))))
+                                'face (get-text-property 0 'face r)))))
+  (bbdb-initialize 'gnus 'message)
+  (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
+  (bbdb-insinuate-message)
+
+  (eval-after-load 'ruby-mode
+    (load "~/.emacs.d/private/myconfig/my-ruby-mode.el"))
+
+  (eval-after-load 'ox-latex
+    (lambda () (add-to-list 'org-latex-classes
+                  '("koma-article"
+                    "\\documentclass{scrartcl}"
+                    ("\\section{%s}" . "\\section*{%s}")
+                    ("\\subsection{%s}" . "\\subsection*{%s}")
+                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -345,9 +371,11 @@ layers configuration. You are free to put any user code."
  '(browse-url-browser-function (quote browse-url-chromium))
  '(gnus-article-emulate-mime t)
  '(gnus-buttonized-mime-types (quote ("multipart/signed" "multipart/encrypted")))
+ '(gnus-interactive-exit nil)
  '(mm-decrypt-option (quote known))
  '(mm-verify-option (quote known))
  '(password-cache-expiry 300)
+ '(require-final-newline (quote visit-save))
  '(send-mail-function (quote smtpmail-send-it))
  '(vc-follow-symlinks t))
 (custom-set-faces

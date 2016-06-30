@@ -20,7 +20,11 @@
   "ow" 'delete-other-windows
   "of" (lambda () (interactive)
          (make-frame)
-         (delete-other-windows)))
+         (delete-other-windows))
+  "olg" (lambda () (interactive)
+          (ispell-change-dictionary "german"))
+  "ole" (lambda () (interactive)
+          (ispell-change-dictionary "english")))
 
 (evil-leader/set-key-for-mode 'racket-mode
   "ms$" 'jpath/racket-evil-send-last-sexp-eol)

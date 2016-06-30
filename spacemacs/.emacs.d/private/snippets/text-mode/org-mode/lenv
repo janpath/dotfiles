@@ -1,0 +1,5 @@
+#name : Latex Environment
+# --
+\begin{$1}$
+$0
+\end{$1}

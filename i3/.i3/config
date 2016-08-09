@@ -193,7 +193,7 @@ bindsym XF86AudioMute exec amixer set Master toggle
 bindsym Mod4+l exec ~/.bin/screen_off_slock.sh
 
 #Applications
-bindsym Mod4+s exec keepassx
+bindsym Mod4+s exec keepassx2
 bindsym Mod4+w exec chromium
 bindsym Mod4+h exec urxvt -title "[f] htop" -g 120x40 -e htop
 # bindsym Mod4+m exec urxvt -title "[f] mutt" -g 120x40 -e mutt

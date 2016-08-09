@@ -274,6 +274,7 @@ in `dotspacemacs/user-config'."
    gnus-message-replyencrypt t
    gnus-message-replysign t
    helm-ff-newfile-prompt-p nil
+   bbdb-mua-auto-update-p 'query
    rcirc-server-alist '(("chat.freenode.net"
                          :nick "jan_path"
                          :user-name "jan_path"
@@ -330,7 +331,8 @@ layers configuration. You are free to put any user code."
                                         '(" widget-choose"
                                           "*Completions*"
                                           "*Warnings*"
-                                          "*evil-registers*")
+                                          "*evil-registers*"
+                                          "*Calendar*")
                                         :initial-value nil)))
                                :regexp t :height 0.4 :position 'bottom
                                :noselect t :dedicated t :stick t)
@@ -346,9 +348,10 @@ layers configuration. You are free to put any user code."
   (bbdb-initialize 'gnus 'message)
   (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
   (bbdb-insinuate-message)
+  (bbdb-mua-auto-update-init 'message)
 
-  (eval-after-load 'ruby-mode
-    (load "~/.emacs.d/private/myconfig/my-ruby-mode.el"))
+  ;; (eval-after-load 'ruby-mode
+  ;;   (load "~/.emacs.d/private/myconfig/my-ruby-mode.el"))
 
   (eval-after-load 'ox-latex
     (lambda () (add-to-list 'org-latex-classes
@@ -374,6 +377,9 @@ layers configuration. You are free to put any user code."
  '(gnus-interactive-exit nil)
  '(mm-decrypt-option (quote known))
  '(mm-verify-option (quote known))
+ '(package-selected-packages
+   (quote
+    (ghc helm helm-core haskell-mode flycheck magit uuidgen org-projectile org-download mwim link-hint intero hlint-refactor helm-hoogle git-link flyspell-correct-helm flyspell-correct eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff eshell-z company-ghci column-enforce-mode request yaml-mode xterm-color ws-butler window-numbering which-key web-mode volatile-highlights vi-tilde-fringe use-package toc-org tagedit spacemacs-theme spaceline solarized-theme smooth-scrolling smeargle smart-tabs-mode slim-mode shm shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe restart-emacs rcirc-notify rcirc-color rbenv rainbow-delimiters racket-mode quelpa projectile-rails popwin persp-mode paradox page-break-lines orgit org-repo-todo org-present org-pomodoro org-plus-contrib org-bullets open-junk-file neotree multi-term move-text monokai-theme mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode jade-mode info+ indent-guide ido-vertical-mode i3-emacs hungry-delete htmlize hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flyspell helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator feature-mode fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-smartparens evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode emacs-eclim elisp-slime-nav diff-hl define-word company-web company-statistics company-quickhelp company-ghc company-cabal company-auctex cmm-mode clean-aindent-mode chruby bundler buffer-move bracketed-paste bbdb auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(password-cache-expiry 300)
  '(require-final-newline (quote visit-save))
  '(send-mail-function (quote smtpmail-send-it))

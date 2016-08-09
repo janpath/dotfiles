@@ -57,7 +57,7 @@ alias sicprepl='racket -i -p neil/sicp -l xrepl'
 
 source ~/.profile
 
-source ~/.zsh/syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh/syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 source ~/.zsh/history-substring-search/zsh-history-substring-search.zsh
 #source ~/.zsh/autosuggestions/autosuggestions.zsh
 #zle-line-init() {

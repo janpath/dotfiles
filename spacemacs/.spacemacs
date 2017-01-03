@@ -42,7 +42,6 @@ values."
      auto-completion
      emacs-lisp
      helm
-     racket
      myconfig
      multiple-help-buffers
      java
@@ -53,7 +52,6 @@ values."
      markdown
      html
      yaml
-     ;;intero
      haskell
      (rcirc :variables rcirc-enable-authinfo-support t)
      (shell :variables shell-default-shell 'eshell)
@@ -165,8 +163,8 @@ values."
    dotspacemacs-emacs-command-key "SPC"
    ;; The key used for Vim Ex commands (default ":")
    dotspacemacs-ex-command-key ":"
-   ;; Major mode leader key is a shortcut key which is the equivalent of
-   ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
+   ;; The leader key accessible in `emacs state' and `insert state'
+   ;; (default "M-m")
    dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
@@ -425,9 +423,6 @@ you should place your code here."
   (bbdb-insinuate-message)
   (bbdb-mua-auto-update-init 'message)
 
-  ;; (eval-after-load 'ruby-mode
-  ;;   (load "~/.emacs.d/private/myconfig/my-ruby-mode.el"))
-
   (eval-after-load 'ox-latex
     (lambda () (add-to-list 'org-latex-classes
                             '("koma-article"
@@ -443,7 +438,6 @@ you should place your code here."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -458,7 +452,6 @@ This function is called at the very end of Spacemacs initialization."
  '(async-shell-command-buffer (quote new-buffer))
  '(browse-url-browser-function (quote browse-url-chromium))
  '(flycheck-pos-tip-timeout -1)
- '(global-whitespace-mode t)
  '(gnus-article-emulate-mime t)
  '(gnus-buttonized-mime-types (quote ("multipart/signed" "multipart/encrypted")))
  '(gnus-interactive-exit nil)

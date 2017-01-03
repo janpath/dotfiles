@@ -37,7 +37,7 @@ school=~/Documents/school
 ws=~/Documents/workspace
 qlrepo=~ws/quodlibet
 soli=/srv/http/wordpress/wp-content/themes/soliloquy-pro/
-uni=~/Documents/university/2016ss
+uni=~/Documents/university/2016ws
 : ~tmp ~school ~ws ~soli ~qlrepo ~uni
 
 setopt auto_pushd
@@ -50,9 +50,7 @@ bindkey "^[[B" history-substring-search-down
 
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
-
 alias refresh='source ~/.zshrc'
-
 alias sicprepl='racket -i -p neil/sicp -l xrepl'
 
 source ~/.profile

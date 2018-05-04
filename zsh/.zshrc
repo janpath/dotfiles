@@ -2,11 +2,16 @@
 [[ $- != *i* ]] && return
 #[[ -z "$TMUX" ]] && exec tmux || true
 
+fpath=( ~/.zsh/zfuncs "${fpath[@]}" )
+
 COMPLETION_WAITING_DOTS='false'
-source ~/.zsh/completion.zsh
+. ~/.zsh/completion.zsh
 
 autoload -Uz compinit
 compinit
+
+autoload -Uz manydots-magic
+manydots-magic
 
 HISTFILE=~/.histfile
 HISTSIZE=10000
@@ -18,49 +23,50 @@ setopt hist_ignore_space
 setopt hist_verify
 setopt inc_append_history
 setopt share_history # share command history data
+setopt autocd
 
 unsetopt beep
 
-source ~/.zsh/termsupport.zsh
+. ~/.zsh/termsupport.zsh
 
 PROMPT='%# '
-#RPROMPT='%F{red}%B%(?..[%?] )%b%f%~ < %F{cyan}%n%f@%F{blue}%U%m%u%f'
+RPROMPT='%F{red}%B%(?..[%?] )%b%f%~ < %F{cyan}%n%f@%F{blue}%U%m%u%f'
 
-#Fish-shell
-setopt PROMPT_SUBST
-source ~/.zsh/trunc_dir.zsh
-RPROMPT='%F{red}%B%(?..[%?] )%b%f%F{cyan}%n%f@%F{blue}%U%M%u%f:$(trunc_dir -l -N -m -H)'
-
-#Named Directorys
-tmp=~/.tmp
-school=~/Documents/school
-ws=~/Documents/workspace
-qlrepo=~ws/quodlibet
-soli=/srv/http/wordpress/wp-content/themes/soliloquy-pro/
-uni=~/Documents/university/2016ws
-: ~tmp ~school ~ws ~soli ~qlrepo ~uni
+. ~/.named_dirs
 
 setopt auto_pushd
 setopt pushd_ignore_dups
 setopt pushd_minus
 
-source ~/.zsh/vim-mode.zsh
+. ~/.zsh/vim-mode.zsh
 bindkey "^[[A" history-substring-search-up
 bindkey "^[[B" history-substring-search-down
 
+# Common aliases
 alias grep='grep --color=auto'
-alias ls='ls --color=auto'
-alias refresh='source ~/.zshrc'
-alias sicprepl='racket -i -p neil/sicp -l xrepl'
+alias ls='ls -Fh --color=auto'
+alias l='ls'
+alias la='ls -A'
+alias ll='ls -l'
+alias lla='ls -lA'
+alias t='tree'
+alias tp='tree --prune -P'
+alias refresh='. ~/.zshrc'
+alias info='info --vi-keys --variable link-style=blue --variable active-link-style=blue,underline --variable match-style=bold'
+alias r='rm'
+alias rr='rm -rf'
 
-source ~/.profile
+. ~/.aliases
 
-source ~/.zsh/syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-source ~/.zsh/history-substring-search/zsh-history-substring-search.zsh
-#source ~/.zsh/autosuggestions/autosuggestions.zsh
-#zle-line-init() {
-#  zle autosuggest-start
-#}
-#zle -N zle-line-init
-#bindkey '^T' autosuggest-toggle
-#bindkey '^F' vi-forward-word
+. /etc/profile.d/vte.sh
+
+. ~/.profile
+
+. ~/.zsh/syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+. ~/.zsh/history-substring-search/zsh-history-substring-search.zsh
+
+export FZF_DEFAULT_COMMAND='ag -g ""'
+[ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"

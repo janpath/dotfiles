@@ -43,8 +43,8 @@ function trunc_dir() {
         home=1
       ;;
       --help)
-        print 'Usage: rtab [-f -l -s -t] [directory]'
-        print ' -f, --fish      fish-simulation, like -l -s -t'
+        print 'Usage: rtab [-f -l -s -m -H -N] [directory]'
+        print ' -f, --fish      fish-simulation, like -l -s -h -H -N'
         print ' -l, --last      Print the last directory''s full name'
         print ' -s, --short     Truncate directory names to the first character'
         print ' -m, --myhome    Substitute ~ for the home directory'

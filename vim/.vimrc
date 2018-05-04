@@ -9,7 +9,15 @@ Plug 'neovimhaskell/haskell-vim',    {'for' : 'haskell'}
 Plug 'gilligan/vim-textobj-haskell', {'for' : 'haskell'}
 Plug 'Shougo/vimproc.vim',           {'do'  : 'make'}
 Plug 'scrooloose/nerdtree'
-Plug 'vim-syntastic/syntastic'
+" Plug 'vim-syntastic/syntastic'
+Plug 'w0rp/ale'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 Plug 'junegunn/vim-easy-align'
 Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/fzf', { 'dir': '~/.local/share/fzf', 'do': './install --all' }
@@ -43,6 +51,7 @@ Plug 'jacoborus/tender.vim'
 " endif
 Plug 'jgdavey/tslime.vim'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'kchmck/vim-coffee-script'
 call plug#end()
 
 "" Custom Mappings
@@ -60,6 +69,8 @@ nnoremap <C-l> <C-w>l
 nnoremap Y y$
 nnoremap <leader>t <C-]>
 nnoremap <leader>sc :noh<CR>
+
+digraphs 0+ 8853 " ⊕
 
 "" Custom settings
 set clipboard=unnamedplus
@@ -95,7 +106,7 @@ set shiftwidth=2
 
 set undofile
 set title
-set mouse=
+set foldlevelstart=99
 
 " Fix bad defaults:
 syntax on
@@ -108,6 +119,11 @@ set t_Co=256
 set wildmenu
 set cmdheight=1
 
+
+silent !mkdir -p ~/.vim/backups
+silent !mkdir -p ~/.vim/undos
+set undodir=~/.vim/undos
+
 "" Easy align
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -115,13 +131,8 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-" "" CtrlP
-" let g:ctrlp_map = '<c-p>'
-" let g:ctrlp_cmd = 'CtrlPMixed'
-" let g:ctrlp_working_path_mode = 'ra'
-" nnoremap <leader>pt :CtrlPTag<CR>
-
 "" FZF
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 nnoremap <leader>f :Files<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :Lines<CR>
@@ -170,15 +181,22 @@ command! -nargs=* Ag call fzf#run({
 \ 'down':    '50%'
 \ })
 
-"" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"" ALE
+let g:airline#extensions#ale#enabled = 1
+nnoremap  <Leader>ld :ALEDetail<CR>
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+"" Syntastic
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+"
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+
+"" Use deoplete.
+let g:deoplete#enable_at_startup = 1
 
 "" air-line
 set laststatus=2

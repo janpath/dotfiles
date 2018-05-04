@@ -24,18 +24,18 @@ font pango:DejaVu Sans Mono 6
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec urxvt
-bindsym $mod+Shift+Return exec cwdspawn.sh urxvt
+bindsym $mod+Return exec ~/.bin/terminal.sh
+bindsym $mod+Shift+Return exec ~/.bin/termtogglefont.sh
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+s exec dmenu_run
+bindsym $mod+d exec dmenu_run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym $mod+Shift+s exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+Shift+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 bindsym $mod+n focus left
@@ -58,13 +58,13 @@ bindsym $mod+h split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+t fullscreen
+bindsym $mod+f fullscreen
 popup_during_fullscreen smart
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+r layout stacking
+bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
-bindsym $mod+f layout toggle split
+bindsym $mod+t layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -76,7 +76,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-bindsym $mod+d focus child
+bindsym $mod+c focus child
 
 # switch to workspace
 bindsym $mod+0 workspace number 0
@@ -115,14 +115,20 @@ bindsym $mod+Shift+p restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+f exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-bindsym $mod+Shift+w exec "i3-rename-workspace.sh"
+bindsym $mod+Shift+w exec "~/.bin/i3-rename-workspace.sh"
 bindsym $mod+q exec "quickswitch.py"
-
 bindsym $mod+u exec i3-input
 
 bindsym $mod+b border toggle
 new_window 1pixel
 new_float 1pixel
+
+# Move the currently focused window to the scratchpad
+bindsym $mod+Shift+semicolon move scratchpad
+
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+semicolon scratchpad show
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -142,7 +148,7 @@ mode "resize" {
         bindsym Escape mode "default"
 }
 
-bindsym $mod+p mode "resize"
+bindsym $mod+r mode "resize"
 
 mode "passthrough" {
     bindsym $mod+Escape mode "default"
@@ -155,8 +161,8 @@ bindsym $mod+Escape mode "passthrough"
 bar {
         status_command i3status
         position bottom
-        wheel_up_cmd nop
-        wheel_down_cmd nop
+        bindsym button4 nop
+        bindsym button5 nop
         colors {
                 background #000000
                 statusline #ffffff
@@ -172,9 +178,10 @@ force_display_urgency_hint 500ms
 
 workspace_auto_back_and_forth yes
 
-#for_window [title="^\[f\]"] floating enable
-#for_window [class="^\[f\]"] floating enable
-#for_window [title=" - KeePassX$"] floating enable
+for_window [title="^\[f\]"] floating enable
+for_window [title="Tor Browser"] floating enable
+for_window [class="^\[f\]"] floating enable
+for_window [title=" - KeePassX$"] floating enable
 
 #Quod Libet
 bindsym Mod4+q exec ~/.quodlibet/scripts/focus.sh
@@ -185,6 +192,8 @@ bindsym XF86AudioNext exec quodlibet --next
 bindsym Control+XF86AudioNext exec ~/.quodlibet/scripts/fade_next.sh
 
 #Audio volume
+bindsym Shift+XF86AudioLowerVolume exec amixer set Master 1%- unmute
+bindsym Shift+XF86AudioRaiseVolume exec amixer set Master 1%+ unmute
 bindsym XF86AudioLowerVolume exec amixer set Master 10%- unmute
 bindsym XF86AudioRaiseVolume exec amixer set Master 10%+ unmute
 bindsym XF86AudioMute exec amixer set Master toggle
@@ -193,12 +202,27 @@ bindsym XF86AudioMute exec amixer set Master toggle
 bindsym Mod4+l exec ~/.bin/screen_off_slock.sh
 
 #Applications
-bindsym Mod4+s exec keepassx2
-bindsym Mod4+w exec chromium
-bindsym Mod4+h exec urxvt -title "[f] htop" -g 120x40 -e htop
+bindsym Mod4+s exec keepassxc
+bindsym Mod4+w exec ~/.bin/browser.sh
+bindsym Mod4+h exec ~/.bin/terminal.sh --title '[f]htop' --geometry 120x40 -e htop
 # bindsym Mod4+m exec urxvt -title "[f] mutt" -g 120x40 -e mutt
 bindsym Mod4+m exec emacsclient -c -n -e '(progn (delete-other-windows) (gnus))'
 bindsym Mod4+p exec pavucontrol --class '[f] pavucontrol'
 bindsym Mod4+e exec emacsclient -c -n -e '(progn (delete-other-windows) (spacemacs/home))'
 
 #exec --no-startup-id compton
+
+exec setxkbmap mycolemak
+exec xflux -l 54.3781010 -g 10.3430390 -k 2500 &
+exec syndaemon -dkti1
+exec pulseaudio --start &
+exec ~/.bin/keyboard.sh &
+exec xrdb ~/.solarized/xresources-colors-solarized/Xresources_dark
+exec xrdb -merge ~/.Xresources
+exec feh --bg-fill Pictures/background.jpg &
+exec dunst -config ~/.dunstrc &
+exec unclutter &
+exec ~/.autostart.sh
+exec synclient TapButton1=1
+exec synclient TapButton2=3
+exec synclient TapButton3=2

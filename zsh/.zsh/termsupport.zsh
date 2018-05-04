@@ -30,8 +30,9 @@ function omz_termsupport_preexec {
   # cmd name only, or if this is sudo or ssh, the next cmd
   local CMD=${1[(wr)^(*=*|sudo|ssh|rake|-*)]:gs/%/%%}
   local LINE="${2:gs/%/%%}"
+  local PROMPT="%n@%m: %~ %#"
 
-  title '$CMD' '%100>...>$LINE%<<'
+  title "$CMD" "%100>...>$PROMPT $LINE%<<"
 }
 
 precmd_functions+=(omz_termsupport_precmd)

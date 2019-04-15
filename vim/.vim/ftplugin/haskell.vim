@@ -5,7 +5,7 @@ set expandtab
 let g:NERDAltDelims_haskell = 1
 
 "" NecoGHC
-let g:haskellmode_completion_ghc = 0
+"let g:haskellmode_completion_ghc = 0
 "autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 "" AutoPairs
@@ -30,4 +30,4 @@ let g:haskell_enable_static_pointers = 1
 let g:haskell_backpack = 1
 
 "" ALE
-let g:ale_linters = {'haskell' : ['ghc-mod'] }
+"let g:ale_linters = {'haskell' : ['ghc-mod'] }

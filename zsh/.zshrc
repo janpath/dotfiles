@@ -2,10 +2,18 @@
 [[ $- != *i* ]] && return
 #[[ -z "$TMUX" ]] && exec tmux || true
 
+# The xterm-termite terminal type only makes problems, because it usually is not
+# understood.
+if [ "x$TERM" = "xxterm-termite" ]; then
+  export TERM="xterm-256color"
+fi
+
 fpath=( ~/.zsh/zfuncs "${fpath[@]}" )
 
 COMPLETION_WAITING_DOTS='false'
 . ~/.zsh/completion.zsh
+. ~/.zsh/nix-zsh-completions/nix.plugin.zsh
+fpath=($HOME/.zsh/nix-zsh-completions $fpath)
 
 autoload -Uz compinit
 compinit
@@ -29,7 +37,7 @@ unsetopt beep
 
 . ~/.zsh/termsupport.zsh
 
-PROMPT='%# '
+[ -z $IN_NIX_SHELL ] && PROMPT='%# ' || PROMPT='%F{blue}%BNix%b%f %# '
 RPROMPT='%F{red}%B%(?..[%?] )%b%f%~ < %F{cyan}%n%f@%F{blue}%U%m%u%f'
 
 . ~/.named_dirs
@@ -44,7 +52,7 @@ bindkey "^[[B" history-substring-search-down
 
 # Common aliases
 alias grep='grep --color=auto'
-alias ls='ls -Fh --color=auto'
+alias ls='ls -vFh --color=auto'
 alias l='ls'
 alias la='ls -A'
 alias ll='ls -l'
@@ -62,11 +70,11 @@ alias rr='rm -rf'
 
 . ~/.profile
 
+. ~/.zsh/zsh-nix-shell/nix-shell.plugin.zsh
 . ~/.zsh/syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 . ~/.zsh/history-substring-search/zsh-history-substring-search.zsh
 
 export FZF_DEFAULT_COMMAND='ag -g ""'
 [ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).

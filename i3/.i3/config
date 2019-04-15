@@ -24,8 +24,8 @@ font pango:DejaVu Sans Mono 6
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec ~/.bin/terminal.sh
-bindsym $mod+Shift+Return exec ~/.bin/termtogglefont.sh
+bindsym $mod+Return exec ~/.bin/termite
+bindsym $mod+Shift+Return exec ~/.bin/termite -t
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -161,8 +161,8 @@ bindsym $mod+Escape mode "passthrough"
 bar {
         status_command i3status
         position bottom
-        bindsym button4 nop
-        bindsym button5 nop
+        wheel_up_cmd nop
+        wheel_down_cmd nop
         colors {
                 background #000000
                 statusline #ffffff
@@ -203,6 +203,7 @@ bindsym Mod4+l exec ~/.bin/screen_off_slock.sh
 
 #Applications
 bindsym Mod4+s exec keepassxc
+bindsym Mod4+r exec ~/.bin/refresh-screen.sh
 bindsym Mod4+w exec ~/.bin/browser.sh
 bindsym Mod4+h exec ~/.bin/terminal.sh --title '[f]htop' --geometry 120x40 -e htop
 # bindsym Mod4+m exec urxvt -title "[f] mutt" -g 120x40 -e mutt
@@ -212,14 +213,14 @@ bindsym Mod4+e exec emacsclient -c -n -e '(progn (delete-other-windows) (spacema
 
 #exec --no-startup-id compton
 
-exec setxkbmap mycolemak
+exec ~/.xkb/use.sh
 exec xflux -l 54.3781010 -g 10.3430390 -k 2500 &
 exec syndaemon -dkti1
-exec pulseaudio --start &
+#exec pulseaudio --start &
 exec ~/.bin/keyboard.sh &
 exec xrdb ~/.solarized/xresources-colors-solarized/Xresources_dark
 exec xrdb -merge ~/.Xresources
-exec feh --bg-fill Pictures/background.jpg &
+exec feh --bg-fill Pictures/wallpapers/current &
 exec dunst -config ~/.dunstrc &
 exec unclutter &
 exec ~/.autostart.sh

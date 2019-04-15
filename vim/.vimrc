@@ -4,7 +4,7 @@ else
   call plug#begin('~/.vim/plugged')
 endif
 Plug 'eagletmt/ghcmod-vim',          {'for' : 'haskell'}
-Plug 'eagletmt/neco-ghc',            {'for' : 'haskell'}
+" Plug 'eagletmt/neco-ghc',            {'for' : 'haskell'}
 Plug 'neovimhaskell/haskell-vim',    {'for' : 'haskell'}
 Plug 'gilligan/vim-textobj-haskell', {'for' : 'haskell'}
 Plug 'Shougo/vimproc.vim',           {'do'  : 'make'}

@@ -40,7 +40,7 @@ unsetopt beep
 [ -z $IN_NIX_SHELL ] && PROMPT='%# ' || PROMPT='%F{blue}%BNix%b%f %# '
 RPROMPT='%F{red}%B%(?..[%?] )%b%f%~ < %F{cyan}%n%f@%F{blue}%U%m%u%f'
 
-. ~/.named_dirs
+. ~/.zsh/named_dirs.zsh
 
 setopt auto_pushd
 setopt pushd_ignore_dups

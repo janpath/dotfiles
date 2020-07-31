@@ -1,0 +1,5 @@
+default xkb_keycodes "mousebuttons" {
+    <PT1> = 251;
+    <PT2> = 252;
+    <PT3> = 253;
+};

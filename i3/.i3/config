@@ -213,7 +213,7 @@ bindsym Mod4+e exec emacsclient -c -n -e '(progn (delete-other-windows) (spacema
 
 #exec --no-startup-id compton
 
-exec ~/.xkb/use.sh
+exec ~/dotfiles/xkb/use.sh
 exec xflux -l 54.3781010 -g 10.3430390 -k 2500 &
 exec syndaemon -dkti1
 #exec pulseaudio --start &

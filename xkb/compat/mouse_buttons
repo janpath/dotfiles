@@ -1,0 +1,7 @@
+default partial xkb_compatibility "mousebuttons" {
+   interpret.repeat= False;
+   interpret Pointer_EnableKeys { action= LockControls(controls=MouseKeys+Overlay1); };
+   interpret comma  { action= PointerButton(button=1); };
+   interpret period { action= PointerButton(button=3); };
+   interpret slash  { action= PointerButton(button=2); };
+};

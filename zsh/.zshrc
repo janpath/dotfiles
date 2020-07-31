@@ -38,7 +38,7 @@ unsetopt beep
 . ~/.zsh/termsupport.zsh
 
 [ -z $IN_NIX_SHELL ] && PROMPT='%# ' || PROMPT='%F{blue}%BNix%b%f %# '
-RPROMPT='%F{red}%B%(?..[%?] )%b%f%~ < %F{cyan}%n%f@%F{blue}%U%m%u%f'
+RPROMPT='%F{red}%B%(?..[%?] )%b%f%~ %F{cyan}%n%f@%F{blue}%U%m%u%f'
 
 . ~/.zsh/named_dirs.zsh
 

@@ -19,7 +19,7 @@ set $term termite
 set $menu dmenu_run
 
 #set $bgimage /usr/share/sway/Sway_Wallpaper_Blue_1920x1080.png
-set $bgimage ~/Pictures/background.jpg
+set $bgimage ~/Pictures/wallpapers/current
 
 ### Output configuration
 #
@@ -102,7 +102,7 @@ output * bg $bgimage fill
 #
 # Workspaces:
 #
-    workspace_layout auto left
+    workspace_layout default
     # switch to workspace
     bindsym $mod+0 workspace 0
     bindsym $mod+1 workspace 1
@@ -157,7 +157,7 @@ output * bg $bgimage fill
     bindsym $mod+c focus child
 
     bindsym $mod+a layout auto left
-    orientation auto
+    # orientation auto
     bindsym $mod+l  layout auto ncol inc  1
     bindsym $mod+shift+l layout auto ncol inc -1
     bindsym $mod+m layout auto master inc 1
@@ -213,6 +213,8 @@ bar {
     }
 }
 
+input * xkb_layout "mycolemak"
+
 input "2:17:CyPS/2_Cypress_Trackpad" {
   pointer_accel 1
   tap enabled
@@ -221,8 +223,8 @@ input "2:17:CyPS/2_Cypress_Trackpad" {
 }
 
 bindsym $mod+Shift+w exec "sway-rename-workspace.sh"
-new_window pixel
-new_float pixel
+default_border pixel
+default_floating_border pixel
 
 mode "passthrough" {
   bindsym $mod+Escape mode "default"

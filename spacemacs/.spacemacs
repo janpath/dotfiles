@@ -33,7 +33,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(javascript
+   '(typescript
+     javascript
      rust
      nixos
      idris
@@ -52,7 +53,6 @@ This function should only modify configuration layer settings."
      git
      markdown
      multiple-cursors
-     neotree
      org
      (shell :variables
             shell-default-shell 'eshell
@@ -60,6 +60,7 @@ This function should only modify configuration layer settings."
             shell-default-position 'bottom)
      spell-checking
      syntax-checking
+     treemacs
      version-control
      )
 
@@ -78,6 +79,7 @@ This function should only modify configuration layer settings."
                                       (evil-numbers :location
                                                     (recipe :fetcher github
                                                             :repo "janpath/evil-numbers"))
+                                      (haskell-mode :location "~/workspace/haskell-mode")
                                       )
 
    ;; A list of packages that cannot be updated.
@@ -667,6 +669,96 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(backup-directory-alist (quote ((".*" . "temporary-file-directory"))))
  '(browse-url-browser-function (quote browse-url-firefox))
+ '(dante-load-flags
+   (quote
+    ("+c" "-ferror-spans" "-fdefer-type-errors" "-Wwarn=missing-home-modules" "-fdiagnostics-color=never" "-fno-diagnostics-show-caret")))
+ '(dante-methods
+   (quote
+    (new-impure-nix-project new-impure-nix new-build bare-ghci)))
+ '(dante-methods-alist
+   (quote
+    ((new-impure-nix-project dante-cabal-new-nix
+                             ("nix-shell" "--run"
+                              (concat "cabal v2-repl "
+                                      (progn
+                                        (setq-local dante-package-name nil)
+                                        (or dante-target
+                                            (dante-package-name
+                                             (dante-cabal-find-file
+                                              (file-name-directory
+                                               (buffer-file-name))))
+                                            ""))
+                                      " --builddir=dist-newstyle/dante")))
+     (styx "styx.yaml"
+           ("styx" "repl" dante-target))
+     (new-impure-nix dante-cabal-nix
+                     ("nix-shell" "--run"
+                      (concat "cabal v2-repl "
+                              (progn
+                                (setq-local dante-package-name nil)
+                                (or dante-target
+                                    (dante-package-name
+                                     (dante-cabal-find-file
+                                      (file-name-directory
+                                       (buffer-file-name))))
+                                    ""))
+                              " --builddir=dist-newstyle/dante")))
+     (new-nix dante-cabal-nix
+              ("nix-shell" "--pure" "--run"
+               (concat "cabal v2-repl "
+                       (progn
+                         (setq-local dante-package-name nil)
+                         (or dante-target
+                             (dante-package-name
+                              (dante-cabal-find-file
+                               (file-name-directory
+                                (buffer-file-name))))
+                             ""))
+                       " --builddir=dist-newstyle/dante")))
+     (nix dante-cabal-nix
+          ("nix-shell" "--pure" "--run"
+           (concat "cabal v1-repl "
+                   (or dante-target "")
+                   " --builddir=dist/dante")))
+     (impure-nix dante-cabal-nix
+                 ("nix-shell" "--run"
+                  (concat "cabal v1-repl "
+                          (or dante-target "")
+                          " --builddir=dist/dante")))
+     (new-build
+      (lambda
+        (d)
+        (directory-files d t "..cabal$"))
+      ("cabal" "new-repl"
+       (or dante-target
+           (dante-package-name)
+           nil)
+       "--builddir=dist-newstyle/dante"))
+     (nix-ghci
+      #[257 "\300\301\302#\207"
+            [directory-files t "shell.nix\\|default.nix"]
+            5 "
+
+(fn D)"]
+      ("nix-shell" "--pure" "--run" "ghci"))
+     (stack "stack.yaml"
+            ("stack" "repl" dante-target))
+     (mafia "mafia"
+            ("mafia" "repl" dante-target))
+     (bare-cabal
+      #[257 "\300\301\302#\207"
+            [directory-files t "..cabal$"]
+            5 "
+
+(fn D)"]
+      ("cabal" "v1-repl" dante-target "--builddir=dist/dante"))
+     (bare-ghci
+      #[257 "\300\207"
+            [t]
+            2 "
+
+(fn _)"]
+      ("ghci")))))
  '(dired-listing-switches "-alh")
  '(evil-digraphs-table-user
    (quote
@@ -712,9 +804,11 @@ This function is called at the very end of Spacemacs initialization."
       . 8789)
      ((61 63)
       . 8773))) nil (evil-digraphs))
- '(evil-want-Y-yank-to-eol nil)
+ '(evil-want-Y-yank-to-eol t)
+ '(fill-column 80)
  '(flycheck-pos-tip-timeout -1)
  '(gnus-buttonized-mime-types (quote ("multipart/signed" "multipart/encrypted")))
+ '(haskell-mode-stylish-haskell-path "brittany")
  '(js-indent-level 2)
  '(js2-strict-missing-semi-warning nil)
  '(linum-delay t)
@@ -723,38 +817,20 @@ This function is called at the very end of Spacemacs initialization."
  '(mm-verify-option (quote always))
  '(package-selected-packages
    (quote
-    (yasnippet-snippets writeroom-mode visual-fill-column racer org-brain nix-mode magit-svn idris-mode helm-xref editorconfig doom-modeline eldoc-eval dante counsel-projectile counsel swiper ivy centered-cursor-mode cargo rust-mode browse-at-remote window-purpose imenu-list transient all-the-icons ghub let-alist org-mime ag org-category-capture winum fuzzy csv-mode vimrc-mode dactyl-mode nlinum-relative nlinum helm-company helm-c-yasnippet company-web web-completion-data company-tern dash-functional tern company-statistics company-cabal company-auctex auto-yasnippet ac-ispell auto-complete if-emacs bbdb yaml-mode web-mode web-beautify tagedit slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rcirc-notify rcirc-color rbenv pug-mode projectile-rails rake inflections minitest livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc helm-css-scss haml-mode feature-mode emmet-mode coffee-mode chruby bundler inf-ruby auctex-latexmk auctex orgit org-present org-pomodoro alert log4e markdown-toc magit-gitflow intero helm-gitignore haskell-snippets git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ flyspell-correct-helm flycheck-pos-tip pos-tip flycheck-haskell evil-magit magit magit-popup git-commit company-ghci company-ghc ghc xterm-color smeargle shell-pop org-projectile org gntp org-download multi-term mmm-mode markdown-mode htmlize hlint-refactor hindent helm-hoogle yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter gh-md flyspell-correct flycheck with-editor eshell-z eshell-prompt-extras esh-help diff-hl company haskell-mode cmm-mode auto-dictionary ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
+    (tide typescript-mode import-js grizzl add-node-modules-path ghub let-alist org-mime ag org-category-capture winum fuzzy csv-mode vimrc-mode dactyl-mode nlinum-relative nlinum helm-company helm-c-yasnippet company-web web-completion-data company-tern dash-functional tern company-statistics company-cabal company-auctex auto-yasnippet ac-ispell auto-complete if-emacs bbdb yaml-mode web-mode web-beautify tagedit slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rcirc-notify rcirc-color rbenv pug-mode projectile-rails rake inflections minitest livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc helm-css-scss haml-mode feature-mode emmet-mode coffee-mode chruby bundler inf-ruby auctex-latexmk auctex orgit org-present org-pomodoro alert log4e markdown-toc magit-gitflow intero helm-gitignore haskell-snippets git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ flyspell-correct-helm flycheck-pos-tip pos-tip flycheck-haskell evil-magit magit magit-popup git-commit company-ghci company-ghc ghc xterm-color smeargle shell-pop org-projectile org gntp org-download multi-term mmm-mode markdown-mode htmlize hlint-refactor hindent helm-hoogle yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter gh-md flyspell-correct flycheck with-editor eshell-z eshell-prompt-extras esh-help diff-hl company haskell-mode cmm-mode auto-dictionary ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
  '(pop-up-frames t)
- '(popwin:special-display-config
-   (quote
-    (("^\\*Flycheck.+\\*$" :regexp t :position bottom :noselect t :dedicated t :stick t)
-     ("*idris-info*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
-     ("*idris-holes*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
-     ("*idris-notes*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
-     ("*Google Translate*" :height 0.4 :position bottom :noselect t :dedicated t :stick t)
-     ("^*WoMan.+*$" :regexp t :position bottom)
-     ("*nosetests*" :position bottom :noselect nil :dedicated t :stick t)
-     ("*grep*" :position bottom :noselect nil :dedicated t :stick t)
-     ("*ert*" :position bottom :noselect nil :dedicated t :stick t)
-     ("*undo-tree Diff*" :height 0.3 :position bottom :noselect nil :dedicated t :stick t)
-     (" *undo-tree*" :width 60 :position right :noselect nil :dedicated t :stick t)
-     ("*Async Shell Command*" :position bottom :noselect nil :dedicated t :stick t)
-     ("*Shell Command Output*" :position bottom :noselect nil :dedicated t :stick t)
-     ("*compilation*" :height 0.4 :position bottom :noselect t :dedicated t :stick t)
-     ("*Process List*" :height 0.4 :position bottom :noselect nil :dedicated t :stick t)
-     ("\\*Help\\*\\(<[1-9][0-9]*>\\)?" :regexp t :height 0.4 :position bottom :noselect t :dedicated t :stick t))))
  '(safe-local-variable-values
    (quote
-    ((dante-repl-command-line "stack" "repl" dante-target)
-     (haskell-process-use-ghci . t)
-     (haskell-indent-spaces . 2)
+    ((dante-target . req:pure-tests)
      (intero-targets "hpsv-parser:test:test")
      (intero-targets "exp201708:lib")
      (intero-targets "hpsv-parser:lib" "hpsv-parser:test:test"))))
  '(smtpmail-smtp-server "localhost")
  '(smtpmail-smtp-service 25)
  '(standard-indent 2)
- '(tramp-default-method "ssh" nil (tramp))
+ '(tide-node-executable "/home/jan/n/bin/node")
+ '(tramp-default-method "ssh")
+ '(typescript-indent-level 2)
  '(undo-tree-history-directory-alist (quote (("." . "~/.saves"))))
  '(whitespace-global-modes t)
  '(whitespace-style

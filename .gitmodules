@@ -10,3 +10,6 @@
 [submodule "zsh/.zsh/zsh-nix-shell"]
 	path = zsh/.zsh/zsh-nix-shell
 	url = https://github.com/chisui/zsh-nix-shell
+[submodule "zsh/.zsh/zsh-manydots-magic"]
+	path = zsh-manydots-magic
+	url = https://github.com/knu/zsh-manydots-magic
